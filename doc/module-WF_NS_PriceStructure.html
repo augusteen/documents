@@ -1,0 +1,1730 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>Gallo Module: WF_NS_PriceStructure</title>
+<script src="scripts/jquery.js"></script>
+    <script src="scripts/rawdeflate.js"></script>
+    <script src="scripts/jquery_plantuml.js"></script>
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.cerulean.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html"><img class="branding-logo" src="img/Vistaar-Logo.png"
+		alt="logo"/>Gallo</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="WebUI.html">WebUI</a></li><li><a href="Workflow.html">Workflow</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="module-ApproverMatrix.html">ApproverMatrix</a></li><li><a href="module-CreatorMatrix.html">CreatorMatrix</a></li><li><a href="module-GWF_Normalize.html">GWF_Normalize</a></li><li><a href="module-WF_Execution.html">WF_Execution</a></li><li><a href="module-WF_NS_PriceStructure.html">WF_NS_PriceStructure</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="ExportPricePlan.html">ExportPricePlan</a></li><li><a href="WebUI.PricePlanBestPracticesManager.html">WebUI.PricePlanBestPracticesManager</a></li><li><a href="WebUI.PricePlanFinderManager.html">WebUI.PricePlanFinderManager</a></li><li><a href="WF_NS_PS_Generic.html">WF_NS_PS_Generic</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-8">
+	
+		<div id="main">
+			
+
+	<h1 class="page-title">Module: WF_NS_PriceStructure</h1>
+<section>
+
+<header>
+    
+</header>
+
+
+<article>
+    <div class="container-overview">
+    
+        
+
+        
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="WF_NS_PriceStructure.js.html">WF_NS_PriceStructure.js</a>,
+				 <a href="WF_NS_PriceStructure.js.html#sunlight-1-line-16">line 16</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+        <h3 class="subsection-title">Requires</h3>
+
+        <ul>
+            <li>module:WF_NS_PS_Generic</li>
+        </ul>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+<hr>
+<dt>
+    <h4 class="name" id=".WF_NS_PriceStructure_createTaskForApprovalRoles"><span class="type-signature">&lt;static> </span>WF_NS_PriceStructure_createTaskForApprovalRoles(executionContext)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>It is called from <code>WF_NS_PS_Generic.PendingApproval_NodeEnter_Execute</code> it creates Task for all the Delegates with<br>approval permission on the Price Plan</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>executionContext</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Workflow Execution Context</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="WF_NS_PriceStructure.js.html">WF_NS_PriceStructure.js</a>,
+				 <a href="WF_NS_PriceStructure.js.html#sunlight-1-line-559">line 559</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".WF_NS_PriceStructure_createTaskForPublisher"><span class="type-signature">&lt;static> </span>WF_NS_PriceStructure_createTaskForPublisher(executionContext)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>It is called from <code>WF_NS_PS_Generic.Approved_NodeEnter_Execute</code> it creates Task for all the Delegates with<br>approval permission on the Price Plan</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>executionContext</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Workflow Execution Context</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="WF_NS_PriceStructure.js.html">WF_NS_PriceStructure.js</a>,
+				 <a href="WF_NS_PriceStructure.js.html#sunlight-1-line-642">line 642</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".WF_NS_PriceStructure_getMaxSequence"><span class="type-signature">&lt;static> </span>WF_NS_PriceStructure_getMaxSequence(executionContext)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Runs from process definition is used to get the Max Approval Level of the Price Plan which is stored in the entity</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>executionContext</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Workflow Execution Context</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="WF_NS_PriceStructure.js.html">WF_NS_PriceStructure.js</a>,
+				 <a href="WF_NS_PriceStructure.js.html#sunlight-1-line-23">line 23</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">&lt;action name=&quot;executeStartTransition&quot; class=&quot;com.vistaar.workflow.handlers.ScriptHandler&quot;&gt;         &lt;javascript&gt;          &lt;!--@         println(&quot;# Inside node enter of Start!!&quot;);                    var LogUserInfo = executionContext.getContextInstance().getTransientVariable(&quot;UserConnectionInfo&quot;);
+            var LogUserName = LogUserInfo.getUserName();
+            var LogUserRole = LogUserInfo.roleName;
+            println(&quot;# Price structure Created by -: &quot;+LogUserName+&quot; / Role &quot; + LogUserRole);
+            executionContext.setVariable(&quot;PS_Creator&quot;,LogUserName);
+            executionContext.setVariable(&quot;PS_CreatorRole&quot;,LogUserRole);
+            executionContext.setVariable(&quot;isAutoPublish&quot;, true);
+            
+            var TotalApprovalLevel = WF_NS_PriceStructure_getMaxSequence(executionContext);
+            println(&quot;# Total number of approval level -: &quot; + TotalApprovalLevel);
+            executionContext.setVariable(&quot;MaxApproval&quot;,TotalApprovalLevel);
+            //var requiredFieldsArray = createTemplatePSAttributeList();
+            putTemplateRequiredInfoFromReportInExecutionContext(&quot;PricePlanView&quot;,executionContext);</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".WF_NS_PriceStructure_getNotificationUserString"><span class="type-signature">&lt;static> </span>WF_NS_PriceStructure_getNotificationUserString(executionContext)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Runs from process definition</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>executionContext</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Workflow Execution Context</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="WF_NS_PriceStructure.js.html">WF_NS_PriceStructure.js</a>,
+				 <a href="WF_NS_PriceStructure.js.html#sunlight-1-line-718">line 718</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">&lt;state name=&quot;Published&quot;&gt;
+        &lt;event type=&quot;node-enter&quot;&gt;
+            &lt;action name=&quot;setPublisherRoles_PS&quot; class=&quot;com.vistaar.workflow.handlers.ScriptHandler&quot;&gt;
+            &lt;javascript&gt;
+            &lt;!--@   
+            executionContext.setVariable(&quot;CurrentState&quot;,&quot;Published&quot;);
+            var NotifierString = WF_NS_PriceStructure_getNotificationUserString(executionContext);  
+            println(&quot;Notifier User String : &quot; + NotifierString);
+            executionContext.setVariable(&quot;NotifyMailUser&quot;,NotifierString);
+            </pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".WF_NS_PriceStructure_getRecallRole"><span class="type-signature">&lt;static> </span>WF_NS_PriceStructure_getRecallRole(executionContext)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Runs from process definition</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>executionContext</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Workflow Execution Context</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="WF_NS_PriceStructure.js.html">WF_NS_PriceStructure.js</a>,
+				 <a href="WF_NS_PriceStructure.js.html#sunlight-1-line-403">line 403</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">&lt;node name=&quot;Rejected&quot;&gt;
+        &lt;event type=&quot;node-enter&quot;&gt;
+            
+            &lt;action name=&quot;setMailUsers&quot; class=&quot;com.vistaar.workflow.handlers.ScriptHandler&quot;&gt;
+            &lt;javascript&gt;
+            &lt;!--@   
+            var isRejectFlg = executionContext.getVariable(&quot;isRejectFlg&quot;);
+            if(isRejectFlg == true){
+                executionContext.setVariable(&quot;CurrentState&quot;,&quot;Rejected&quot;);
+                var MailUserString = WF_NS_PriceStructure_getRejectRole(executionContext);
+                
+                println(&quot;#### Rejected Node - Mail Users String: &quot;+ MailUserString);
+                executionContext.setVariable(&quot;UserDecision&quot;,&quot;&quot;);
+                executionContext.setVariable(&quot;RejectMailUser&quot;,MailUserString);
+                executionContext.setVariable(&quot;RejectSubject&quot;,&quot;Rejected&quot;);
+                println(&quot;#### Rejected Node javascript end&quot;);
+            }else{
+                executionContext.setVariable(&quot;CurrentState&quot;,&quot;Recall&quot;);
+                var MailUserString = WF_NS_PriceStructure_getRecallRole(executionContext);
+                
+                println(&quot;#### Recall Node - Mail Users String: &quot;+ MailUserString);
+                executionContext.setVariable(&quot;UserDecision&quot;,&quot;&quot;);
+                executionContext.setVariable(&quot;RejectMailUser&quot;,MailUserString);
+                executionContext.setVariable(&quot;RejectSubject&quot;,&quot;Recalled&quot;);
+                println(&quot;#### Recall Node javascript end&quot;);
+            }
+            
+            </pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".WF_NS_PriceStructure_getRejectRole"><span class="type-signature">&lt;static> </span>WF_NS_PriceStructure_getRejectRole(executionContext)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Runs from process definition</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>executionContext</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Workflow Execution Context</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="WF_NS_PriceStructure.js.html">WF_NS_PriceStructure.js</a>,
+				 <a href="WF_NS_PriceStructure.js.html#sunlight-1-line-202">line 202</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">&lt;node name=&quot;Rejected&quot;&gt;
+        &lt;event type=&quot;node-enter&quot;&gt;
+            
+            &lt;action name=&quot;setMailUsers&quot; class=&quot;com.vistaar.workflow.handlers.ScriptHandler&quot;&gt;
+            &lt;javascript&gt;
+            &lt;!--@   
+            var isRejectFlg = executionContext.getVariable(&quot;isRejectFlg&quot;);
+            if(isRejectFlg == true){
+                executionContext.setVariable(&quot;CurrentState&quot;,&quot;Rejected&quot;);
+                var MailUserString = WF_NS_PriceStructure_getRejectRole(executionContext);
+                
+                println(&quot;#### Rejected Node - Mail Users String: &quot;+ MailUserString);
+                executionContext.setVariable(&quot;UserDecision&quot;,&quot;&quot;);
+                executionContext.setVariable(&quot;RejectMailUser&quot;,MailUserString);
+                executionContext.setVariable(&quot;RejectSubject&quot;,&quot;Rejected&quot;);
+                println(&quot;#### Rejected Node javascript end&quot;);
+            }else{
+                executionContext.setVariable(&quot;CurrentState&quot;,&quot;Recall&quot;);
+                var MailUserString = WF_NS_PriceStructure_getRecallRole(executionContext);
+                
+                println(&quot;#### Recall Node - Mail Users String: &quot;+ MailUserString);
+                executionContext.setVariable(&quot;UserDecision&quot;,&quot;&quot;);
+                executionContext.setVariable(&quot;RejectMailUser&quot;,MailUserString);
+                executionContext.setVariable(&quot;RejectSubject&quot;,&quot;Recalled&quot;);
+                println(&quot;#### Recall Node javascript end&quot;);
+            }
+            
+            </pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".WF_NS_PriceStructure_getSubmitRole"><span class="type-signature">&lt;static> </span>WF_NS_PriceStructure_getSubmitRole(executionContext)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>It is called from <code>WF_NS_PriceStructure_getSubmitRoleOnRejectionState</code> it creates Task for all the Delegates with<br>submit permission on the Price Plan</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>executionContext</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Workflow Execution Context</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="WF_NS_PriceStructure.js.html">WF_NS_PriceStructure.js</a>,
+				 <a href="WF_NS_PriceStructure.js.html#sunlight-1-line-74">line 74</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".WF_NS_PriceStructure_getSubmitRoleOnRejectionState"><span class="type-signature">&lt;static> </span>WF_NS_PriceStructure_getSubmitRoleOnRejectionState(executionContext)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Runs from process definition</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>executionContext</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Workflow Execution Context</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="WF_NS_PriceStructure.js.html">WF_NS_PriceStructure.js</a>,
+				 <a href="WF_NS_PriceStructure.js.html#sunlight-1-line-148">line 148</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">&lt;task-node name=&quot;WIP&quot; create-tasks=&quot;false&quot; end-tasks=&quot;true&quot;&gt;
+        &lt;task name=&quot;Submit Task&quot;&gt;
+            &lt;description&gt;Task for Submit the price structure&lt;/description&gt;
+        &lt;/task&gt;
+        &lt;event type=&quot;node-enter&quot;&gt;
+            &lt;action name=&quot;setSubmitterRoles_PS&quot; class=&quot;com.vistaar.workflow.handlers.ScriptHandler&quot;&gt;
+            &lt;javascript&gt;
+            &lt;!--@
+            executionContext.setVariable(&quot;CurrentState&quot;,&quot;WIP&quot;);
+            println(&quot;Processdefinition Step 1 : Create Submit Task !!&quot;);
+            var App_Level =1;
+            executionContext.setVariable(&quot;Approve_Level&quot;,String(App_Level));
+            var MailUserString = WF_NS_PriceStructure_getSubmitRoleOnRejectionState(executionContext);
+            
+            println(&quot;Mail Users String: &quot;+ MailUserString);
+            executionContext.setVariable(&quot;UserDecision&quot;,&quot;&quot;);
+            executionContext.setVariable(&quot;SubmitMailUser&quot;,MailUserString);
+            </pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="~g_ExecuteWorkflowOperation"><span class="type-signature">&lt;inner> </span>g_ExecuteWorkflowOperation(systemFieldsObject, wfConnectionObj, userConnInfo)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Execute Workflow Operation</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>systemFieldsObject</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>System Fields</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>wfConnectionObj</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Workflow Connection Object</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>userConnInfo</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>User Connection Info</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="WF_NS_PriceStructure.js.html">WF_NS_PriceStructure.js</a>,
+				 <a href="WF_NS_PriceStructure.js.html#sunlight-1-line-912">line 912</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        </dl>
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
+		</div>
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+
+	<span class="copyright">
+	Copyright  Vistaar © 2012-2015
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a>
+	
+		on Thu Dec 1st 2016
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>

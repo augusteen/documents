@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Namespace: WF_Execution</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Namespace: WF_Execution</h1>
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>WF_Execution</h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">WF_Execution holds function for perform Workflow transition.</div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="WF_Execution.js.html">WF_Execution.js</a>, <a href="WF_Execution.js.html#line9">line 9</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id=".performWorkFlowTransitions"><span class="type-signature">(static) </span>performWorkFlowTransitions<span class="signature">(documentId, scope, priceplanSystemFileds, wfConnectionObj, docServerManager, userConnInfo, wfTransition, extraAttributes, bAutoPublish)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    Perform Workflow Transtion of Price Plan whose documet Id is passed <br>The list of persistent parameter that are added to the Price Plan <br><ul>	<li>Comments</li>	<li>Product Name</li>	<li>Geography Name</li>	<li>Region Name</li>	<li>Geography Code</li>	<li>Product Code</li>	<li>URL</li>	<li>Region Code</li>	<li>Brand Code</li>	<li>HTML Comments</li>	<li>What</li></ul>The current Workflow Status of plan is checked and based on the status the parameters are put and api<pre> <code> // executeScriptdocServerManager.executeScript("ExecuteWorkflowTask", paramName, paramValue, userConnInfo);</code> </pre>is called and the workflow transtion is performed.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>documentId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Price Plan Document Id in string</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>scope</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Scope of the Price Plan</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>priceplanSystemFileds</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Price Plan System Fields</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>wfConnectionObj</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Vistaar Workflow Connection Object</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>docServerManager</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Docment Server Managers</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>userConnInfo</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">User Connection Info</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>wfTransition</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Next workflow Transtion</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>extraAttributes</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Persistent Parameter List</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>bAutoPublish</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Auto PUblish boolean</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="WF_Execution.js.html">WF_Execution.js</a>, <a href="WF_Execution.js.html#line247">line 247</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".WF_Execution"><span class="type-signature">(static) </span>WF_Execution<span class="signature">(inputContext, docServerManager, userConnInfo, bAutoPublish)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    This is the main function which sets up persistent parameter and performs the Workflow Transtion of the Price Plan from UI
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>inputContext</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Workflow input Context</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>docServerManager</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Entity Doc ServerManager</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>userConnInfo</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">User Connection Info</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>bAutoPublish</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Boolean auto publish</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="WF_Execution.js.html">WF_Execution.js</a>, <a href="WF_Execution.js.html#line27">line 27</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ExportPricePlan.html">ExportPricePlan</a></li></ul><h3>Namespaces</h3><ul><li><a href="ApproverMatrixScript.html">ApproverMatrixScript</a></li><li><a href="CreatorMatrixScript.html">CreatorMatrixScript</a></li><li><a href="WF_Execution.html">WF_Execution</a></li><li><a href="WorkflowScripts.WF_NS_PriceStructure.html">WF_NS_PriceStructure</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Wed Oct 26 2016 17:47:31 GMT+0530 (India Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

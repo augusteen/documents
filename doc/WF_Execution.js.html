@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>Gallo Source: WF_Execution.js</title>
+<script src="scripts/jquery.js"></script>
+    <script src="scripts/rawdeflate.js"></script>
+    <script src="scripts/jquery_plantuml.js"></script>
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.cerulean.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html"><img class="branding-logo" src="img/Vistaar-Logo.png"
+		alt="logo"/>Gallo</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="WebUI.html">WebUI</a></li><li><a href="Workflow.html">Workflow</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="module-ApproverMatrix.html">ApproverMatrix</a></li><li><a href="module-CreatorMatrix.html">CreatorMatrix</a></li><li><a href="module-GWF_Normalize.html">GWF_Normalize</a></li><li><a href="module-WF_Execution.html">WF_Execution</a></li><li><a href="module-WF_NS_PriceStructure.html">WF_NS_PriceStructure</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="ExportPricePlan.html">ExportPricePlan</a></li><li><a href="WebUI.PricePlanBestPracticesManager.html">WebUI.PricePlanBestPracticesManager</a></li><li><a href="WebUI.PricePlanFinderManager.html">WebUI.PricePlanFinderManager</a></li><li><a href="WF_NS_PS_Generic.html">WF_NS_PS_Generic</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+			
+
+		<h1 class="page-title">Source: WF_Execution.js</h1>
+    
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">/**
+     * @fileOverview This files contain function related to Workflow Exection/Transition 
+     * It updates the Price Plan with persistent variables information needed during the Transition.
+     * @author anadar
+     * @version 1.0.0
+     */
+
+
+/**
+ * WF_Execution holds function for perform Workflow transition.
+ * @module  WF_Execution
+ * @requires WF_NS_PriceStructure
+ */
+importPackage(org.json);
+importPackage(java.lang);
+importPackage(java.io);
+importPackage(java.util);
+
+/**
+ * This is the main function which sets up persistent parameter and performs the Workflow Transtion of the Price Plan from UI
+ * @function
+ * @name  WF_Execution
+ * @memberof module:WF_Execution
+ * @param {object} inputContext     Workflow input Context
+ * @param {object} docServerManager Entity Doc ServerManager
+ * @param {object} userConnInfo     User Connection Info
+ * @param {object} bAutoPublish     Boolean auto publish
+ */
+function WF_Execution(inputContext, docServerManager, userConnInfo, bAutoPublish){
+var wfConnectionObj = null;
+println("inputContext >> " + JSON.stringify(inputContext));
+//var inputContext = JSON.parse(inputContext);
+var docIdArray = [inputContext["System Fields"]["Document Id"]];
+var wfTransition = inputContext["WF_Transition"];
+var comments = inputContext["Comments"];
+var productName = inputContext["Product Name"];
+var geographyName = inputContext["Geography Name"];
+var regionName = inputContext["Region Name"];
+
+var geographyCode = inputContext["Geography Code"];
+var productCode = inputContext["Product Code"];
+var timeCode = inputContext["Time Code"];
+var webURL = inputContext["link"];
+
+var brandCode = NormalizedHierachiesMap.get("PC_BRAND_MASTER").get("Price Category").get(productCode).get("Brand");
+var regionCode = NormalizedHierachiesMap.get("GeographyMaster").get("Market").get(geographyCode).get("Region");
+
+println("brandCode > " + brandCode + " / regionCode > " + regionCode);
+
+var docIdArray = new JSONArray(docIdArray);
+var ErrorFileWriterObj = new A_FileWriter("WF_ExecutionError.Log", true);
+//var instanceCreationFileWriterObj = new A_FileWriter("InstanceCreation.Log", true);
+//var formatTMT = new java.text.SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss");
+
+//println("########### NS WF Execution Called ################");
+
+for(var docIdItr = 0, docIdLength = docIdArray.length(); docIdItr&lt;docIdLength; docIdItr++)
+{
+	var documentId = docIdArray.get(docIdItr);
+	//var libraryName = "PriceStructure";
+
+	var columnOption = new HashMap();
+	var columnMap = new HashMap();
+
+	if(documentId.equals("") || null == documentId)
+	{	
+		ErrorFileWriterObj.writeline("Null Doc Id found.");
+	}
+	else
+	{
+		var finalQuery = new JSONObject(); 
+		var conditionFieldNames = new JSONArray(); 
+		var conditionType = new JSONArray(); 
+		var conditionValues = new JSONArray(); 
+		var units = new JSONArray(); 
+
+		conditionFieldNames.put("Document Id"); 
+		conditionValues.put(documentId); 
+		conditionType.put("IN");
+
+		var conditionalUnit = getUnitConditionalQuery("AND", "OR", conditionFieldNames, conditionType, conditionValues);
+
+		units.put(conditionalUnit); 
+		finalQuery.put("Units", units); 
+		finalQuery.put("UnitOperator", "OR"); 
+		var jsonQuery = finalQuery.toString();
+		var document = mergePricePlanAndDealContainerDocuments(jsonQuery, docServerManager, userConnInfo).get(0);
+		var priceplanSystemFileds = document.get("PricePlan System Fields");
+		var extraAttributes = new JSONObject();
+		extraAttributes.put("Comments", comments);
+		extraAttributes.put("Product Name", productName);
+		extraAttributes.put("Geography Name", geographyName);
+		extraAttributes.put("Region Name", regionName);
+		extraAttributes.put("Geography Code", geographyCode);
+		extraAttributes.put("Product Code", productCode);
+		extraAttributes.put("Time Code", timeCode);
+		extraAttributes.put("URL", webURL);
+		extraAttributes.put("Region Code", regionCode);
+		extraAttributes.put("Brand Code", brandCode);
+		
+		var result = performWorkFlowTransitions(documentId, document.get("scope"), priceplanSystemFileds, wfConnectionObj, docServerManager, userConnInfo, wfTransition, extraAttributes, bAutoPublish);
+
+
+		return result;
+	}
+}
+
+//instanceCreationFileWriterObj.close();
+ErrorFileWriterObj.close();
+
+//println("########### WF Execution Finished ################");
+}
+
+function convertHTMLcomment(comments){
+
+	var strHTML ="";
+	var strRecall="";
+
+
+	if(comments.has('Creator')){
+
+		if(comments.get('Creator').get(0).get('Comments').has('Submit')){
+			var strSubmitComments=  comments.get('Creator').get(0).get('Comments').get('Submit');
+
+			var arrSubmit = String(strSubmitComments).split(':');
+
+			if (arrSubmit[1] !== undefined){
+				strHTML = '&lt;tr>&lt;td>' + arrSubmit[0]+ '&lt;/td>&lt;td>' + arrSubmit[1] +'&lt;/td>&lt;/tr>';
+				return strHTML;
+			}
+
+		}
+		if(comments.get('Creator').get(0).get('Comments').has('Recall')){
+			
+			var arrRecall = String(comments.get('Creator').get(0).get('Comments').get('Recall')).split(':');
+
+
+			if(arrRecall[1] !== undefined ){
+				strRecall = '&lt;tr>&lt;td>' + arrRecall[0] + '&lt;/td>&lt;td>' + arrRecall[1] +'&lt;/td>&lt;/tr>';
+				return strRecall;
+			}
+		}
+
+	}
+	
+	if(comments.has('Approver')){
+
+		for (var i = 0; i &lt; comments.get('Approver').length(); i++) {
+			var objApprover = comments.get('Approver').get(i);
+
+			if (objApprover.has('Comments')){
+				var arrAppComments = String(objApprover.get('Comments')).split(':');
+				if(arrAppComments.length >= 1){
+					strHTML = strHTML + '&lt;tr>&lt;td>' + arrAppComments[0] + '&lt;/td>&lt;td>' + arrAppComments[1] +'&lt;/td>&lt;/tr>';
+					return strHTML;			
+				}
+
+			}
+		}
+
+	}
+}
+
+function getWhatComments(comments){
+
+	if(comments.has('What')){
+		return comments.get('What');
+	}
+
+}
+function getCommentsforEmail(processDefinitionName,userConnInfo,processInstanceKey,persistantProps,plastComments){
+
+	var workflowConn= VistaarJSUtils.getWorkflowConnection(userConnInfo);
+	//l_wfConn.getHistoryData(l_processDefinition, l_processInstanceKey, l_fillTaskHistory, l_fillNodeHistory, l_persistentParamKeyArrList);
+
+	var l_persistentParamKeyArrList = java.util.ArrayList();
+	
+	var iterator=  persistantProps.entrySet().iterator();
+    while(iterator.hasNext())
+    {
+        var parameter = iterator.next();
+        var key= parameter.getKey();
+        var value=parameter.getValue();
+
+        l_persistentParamKeyArrList.add(value);
+    }
+
+    var l_historyData =workflowConn.getHistoryData(processDefinitionName,processInstanceKey,true,false, l_persistentParamKeyArrList);
+
+  	var l_taskHistoryInfo = l_historyData.getTaskHistoryInfo();
+
+  	println('History >>' + l_taskHistoryInfo.toString());
+
+  	var strHTML="&lt;table>&lt;tr> &lt;th> Actor &lt;/th> &lt;th> Comments &lt;/th>&lt;/tr> ";
+  	for(var l_taskHistoryInfoIterator = 0; l_taskHistoryInfoIterator &lt; l_taskHistoryInfo.size(); l_taskHistoryInfoIterator++){
+  		
+  		var l_task = l_taskHistoryInfo.get(l_taskHistoryInfoIterator);
+
+  		if(l_task.getEvent() == "Completed"){
+  			
+  			var comments =l_task.getComments();
+
+  			strHTML = strHTML + convertHTMLcomment(new JSONObject(comments[0]));
+
+  		}
+  		
+  	}
+
+  	strHTML = strHTML + convertHTMLcomment(new JSONObject(plastComments));
+
+  	return strHTML + "&lt;/table>";
+}
+
+
+/**
+ * Perform Workflow Transtion of Price Plan whose documet Id is passed &lt;br>
+ * The list of persistent parameter that are added to the Price Plan &lt;br>
+ * &lt;ul>
+ * 	&lt;li>Comments&lt;/li>
+ * 	&lt;li>Product Name&lt;/li>
+ * 	&lt;li>Geography Name&lt;/li>
+ * 	&lt;li>Region Name&lt;/li>
+ * 	&lt;li>Geography Code&lt;/li>
+ * 	&lt;li>Product Code&lt;/li>
+ * 	&lt;li>URL&lt;/li>
+ * 	&lt;li>Region Code&lt;/li>
+ * 	&lt;li>Brand Code&lt;/li>
+ * 	&lt;li>HTML Comments&lt;/li>
+ * 	&lt;li>What&lt;/li>
+ * &lt;/ul>
+ * The current Workflow Status of plan is checked and based on the status the parameters are put and api
+ * &lt;pre> &lt;code> 
+ * // executeScript
+ * docServerManager.executeScript("ExecuteWorkflowTask", paramName, paramValue, userConnInfo);
+ * &lt;/code> &lt;/pre>
+ * is called and the workflow transtion is performed.
+ * @function
+ * @name performWorkFlowTransitions
+ * @memberof module:WF_Execution
+ * @param  {string} documentId            Price Plan Document Id in string
+ * @param  {object} scope                 Scope of the Price Plan
+ * @param  {object} priceplanSystemFileds Price Plan System Fields
+ * @param  {object} wfConnectionObj       Vistaar Workflow Connection Object
+ * @param  {object} docServerManager      Docment Server Managers
+ * @param  {object} userConnInfo          User Connection Info
+ * @param  {string} wfTransition          Next workflow Transtion
+ * @param  {object} extraAttributes       Persistent Parameter List 
+ * @param  {boolean} bAutoPublish          Auto PUblish boolean
+ */
+function performWorkFlowTransitions(documentId, scope, priceplanSystemFileds, wfConnectionObj, docServerManager, userConnInfo, wfTransition, extraAttributes, bAutoPublish)
+{
+	var localProps = new HashMap();
+	var persistantProps = new HashMap();
+	var processDefinitionName = "PricePlan";
+	var CurrentWFState = "";
+	var processInstanceKey = documentId;
+	
+	var comments = extraAttributes.get("Comments");
+	
+	var productName = extraAttributes.get("Product Name");
+	var geographyName = extraAttributes.get("Geography Name");
+	var regionName = extraAttributes.get("Region Name");
+	var geographyCode = extraAttributes.get("Geography Code");
+	var productCode = extraAttributes.get("Product Code");
+	var timeCode = extraAttributes.get("Time Code");
+	var webURL = extraAttributes.get("URL");
+	var year = scope.get("Time");
+	var regionCode = extraAttributes.get("Region Code");
+	var brandCode = extraAttributes.get("Brand Code");
+	
+	var scopeForPermissionEvaluation = new JSONObject();
+	
+	//CreatorMatrixMasters is a globally cached variable which holds the masters for CreatorMatrix.
+	//println("CreatorMatrixMasters : "+CreatorMatrixMasters);
+	var currentWFStatus = new JSONArray(priceplanSystemFileds.get("WorkFlowStatus"));
+	currentWFStatus = currentWFStatus.get(0);
+	var PSDefinitionName = g_activePSDefinition;
+	//println("currentWFStatus >>> " + currentWFStatus);
+	//println("PSDefinitionName >>> " + PSDefinitionName);
+	//println("scope >>> " + scope);
+	var dimensionMasterArrayScope = getMastersScope(PSDefinitionName, scope, CreatorMatrixMasters);
+	//println("dimensionMasterArrayScope >> " + dimensionMasterArrayScope);
+	scopeForPermissionEvaluation.put("Scope", dimensionMasterArrayScope);
+	
+	persistantProps.put("Scope", scopeForPermissionEvaluation.toString());
+	persistantProps.put("libraryName", "PricePlan" );
+	persistantProps.put("documentId", documentId );
+	persistantProps.put("geography", "geography" );
+	persistantProps.put("geography_Attrib", "geography_Attrib" );
+	persistantProps.put("product", "product" );
+	persistantProps.put("product_Attrib", "product_Attrib" );
+
+	var htmlcomments= getCommentsforEmail(processDefinitionName,userConnInfo,processInstanceKey,persistantProps,comments);
+	var what = getWhatComments(new JSONObject(comments));
+
+	var geographyCode = scope.get("Geography");
+	var time = scope.get("Time");
+	var productCode = scope.get("Product");
+	var inputJSON = new JSONObject();
+	inputJSON.put("scope", new JSONObject());
+	inputJSON.get("scope").put("Geography Code", geographyCode);
+	inputJSON.get("scope").put("Product Code", productCode);
+	inputJSON.get("scope").put("Time", time);
+	
+	var l_loadAddOnPSProcessingDataObj = new LoadAddOnPSProcessingData();
+	//l_loadAddOnPSProcessingDataObj.init(inputJSON, docServerManager, userConnInfo);
+	//var onYearLevelAttribute = l_loadAddOnPSProcessingDataObj.getGlobalAttributes();
+	
+	l_loadAddOnPSProcessingDataObj.initPostingAndFuturePlanning(inputJSON, docServerManager, userConnInfo);
+	var onYearLevelAttribute = l_loadAddOnPSProcessingDataObj.getGAPostingAndFuturePlanning();
+	
+	
+	var onYearLevelAttributeJSON = new JSONObject(onYearLevelAttribute);
+	var IsNonPostingMarket = onYearLevelAttributeJSON.get("ON").get("IsNonPostingMarket");
+	if(bAutoPublish != undefined &amp;&amp; bAutoPublish)
+		var IsFuturePlanning = 1;
+	else
+		var IsFuturePlanning = onYearLevelAttributeJSON.get("ON").get("IsFuturePlanning");
+	
+	if(wfConnectionObj == null)
+	{
+		wfConnectionObj = com.vistaar.workflow.core.WorkflowManagerImpl.getInstance();
+	}
+	
+	try{
+		var jsonInput = new JSONObject();
+		var jsonInputString = new JSONArray();
+		var entityName = "PricePlan";
+		var paramName = java.lang.reflect.Array.newInstance(java.lang.String, 1);
+		var paramValue = java.lang.reflect.Array.newInstance(java.lang.String, 1);
+		println("currentWFStatus >> " + currentWFStatus);
+		//currentWFStatus="";
+		//WIP(wfConnectionObj, processDefinitionName, processInstanceKey, localProps, persistantProps, userConnInfo);
+		if(currentWFStatus == ""){
+			println("## First WF Call");
+			WIP(wfConnectionObj, processDefinitionName, processInstanceKey, localProps, persistantProps, userConnInfo);
+			//println("## First WF End");
+		}
+		else if(currentWFStatus == "WIP"){
+			println("## WIP Called");
+			//WIP(wfConnectionObj, processDefinitionName, processInstanceKey, localProps, persistantProps, userConnInfo);
+			//println("## WIP End");
+			
+			//println("## Submit Start");
+			jsonInput.put("System Fields", priceplanSystemFileds);
+			jsonInput.put("Action", "Submit");
+			jsonInput.put("Comments", comments);
+
+			jsonInput.put("What", what);
+			jsonInput.put("HTMLComments", htmlcomments);
+
+			jsonInput.put("Entity Name", entityName);
+			jsonInput.put("IsNonPostingMarket", IsNonPostingMarket);
+			jsonInput.put("IsFuturePlanning", IsFuturePlanning);
+			jsonInput.put("Product Name", productName);
+			jsonInput.put("Geography Name", geographyName);
+			jsonInput.put("Region Name", regionName);
+			jsonInput.put("Year", year);
+			
+			jsonInput.put("Geography Code", geographyCode);
+			jsonInput.put("Product Code", productCode);
+			jsonInput.put("Time Code", timeCode);
+			jsonInput.put("URL", webURL);
+			jsonInput.put("Region Code", regionCode);
+			jsonInput.put("Brand Code", brandCode);
+			
+			jsonInputString.put(jsonInput);
+			paramName[0] = "jsonInputString";
+			paramValue[0] = jsonInputString.toString();
+			
+			//println("ExecuteWorkflowTask Called...");
+			var executeWorkflowTask = docServerManager.executeScript("ExecuteWorkflowTask", paramName, paramValue, userConnInfo);
+			executeWorkflowTask = new JSONObject(executeWorkflowTask);
+			executeWorkflowTask.put("Comments" , comments);
+			return executeWorkflowTask;
+			//println("executeWorkflowTask >> " + executeWorkflowTask);
+			
+			//instanceCreationFileWriterObj.writeline("Workflow Instance Created for "+processInstanceKey+" with state WIP");
+			println("## Submit End");
+		}
+		else if(currentWFStatus == "Pending Approval"){
+			println("## PA Called");
+			
+			if(wfTransition == "Approve"){
+				jsonInput.put("System Fields", priceplanSystemFileds);
+				jsonInput.put("Action", "Approve");
+				jsonInput.put("Comments", comments);
+
+				jsonInput.put("What", what);
+				jsonInput.put("HTMLComments", htmlcomments);
+
+				jsonInput.put("Entity Name", entityName);
+				jsonInput.put("IsNonPostingMarket", IsNonPostingMarket);
+				jsonInput.put("IsFuturePlanning", IsFuturePlanning);
+				jsonInput.put("Product Name", productName);
+				jsonInput.put("Geography Name", geographyName);
+				jsonInput.put("Region Name", regionName);
+				jsonInput.put("Year", year);
+				
+				jsonInput.put("Geography Code", geographyCode);
+				jsonInput.put("Product Code", productCode);
+				jsonInput.put("Time Code", timeCode);
+				jsonInput.put("URL", webURL);
+				jsonInput.put("Region Code", regionCode);
+				jsonInput.put("Brand Code", brandCode);
+				jsonInputString.put(jsonInput);
+				paramName[0] = "jsonInputString";
+				paramValue[0] = jsonInputString.toString();
+			}else if(wfTransition == "Reject"){
+
+
+				jsonInput.put("System Fields", priceplanSystemFileds);
+				jsonInput.put("Action", "Reject");
+
+				jsonInput.put("Comments", comments);
+				//Reject mail notification changes 
+				
+				var RejectRecallMsg1 = "&lt;span style='color:red'> &lt;b> Action &lt;/b> &lt;/span>: &lt;b> Price Plan rejected at Level";
+				var RejectRecallMsg2 = "Please review &lt;/b>";
+				
+				jsonInput.put("RejectRecallSubject","ACTION");
+				jsonInput.put("RejectRecallMsg1",RejectRecallMsg1);
+				jsonInput.put("RejectRecallMsg2",RejectRecallMsg2);
+				jsonInput.put("RejectRecallRole",userConnInfo.getRoleName());
+
+				jsonInput.put("What", what);
+				jsonInput.put("HTMLComments", htmlcomments);
+				
+				jsonInput.put("IsNonPostingMarket", IsNonPostingMarket);
+				jsonInput.put("IsFuturePlanning", IsFuturePlanning);
+				
+				jsonInput.put("Entity Name", entityName);
+				jsonInput.put("wfTransition", wfTransition);
+				jsonInput.put("Product Name", productName);
+				jsonInput.put("Geography Name", geographyName);
+				jsonInput.put("Region Name", regionName);
+				jsonInput.put("Year", year);
+				
+				jsonInput.put("Geography Code", geographyCode);
+				jsonInput.put("Product Code", productCode);
+				jsonInput.put("Time Code", timeCode);
+				jsonInput.put("URL", webURL);
+				jsonInput.put("Region Code", regionCode);
+				jsonInput.put("Brand Code", brandCode);
+				jsonInputString.put(jsonInput);
+				paramName[0] = "jsonInputString";
+				paramValue[0] = jsonInputString.toString();
+			}else if(wfTransition == "Recall"){
+				jsonInput.put("System Fields", priceplanSystemFileds);
+				jsonInput.put("Action", "Reject");
+				jsonInput.put("Comments", comments);
+				
+				var RejectRecallMsg1 = "Notification: Price Plan has been recalled at Level";
+				var RejectRecallMsg2 = "";
+				
+				jsonInput.put("RejectRecallSubject","NOTIFICATION");
+				jsonInput.put("RejectRecallMsg1",RejectRecallMsg1);
+				jsonInput.put("RejectRecallMsg2",RejectRecallMsg2);
+				jsonInput.put("RejectRecallRole",userConnInfo.getRoleName());
+
+
+				jsonInput.put("What", what);
+				jsonInput.put("HTMLComments", htmlcomments);
+				
+				jsonInput.put("IsNonPostingMarket", IsNonPostingMarket);
+				jsonInput.put("IsFuturePlanning", IsFuturePlanning);
+				
+				jsonInput.put("Entity Name", entityName);
+				jsonInput.put("wfTransition", wfTransition);
+				jsonInput.put("Product Name", productName);
+				jsonInput.put("Geography Name", geographyName);
+				jsonInput.put("Region Name", regionName);
+				jsonInput.put("Year", year);
+				
+				jsonInput.put("Geography Code", geographyCode);
+				jsonInput.put("Product Code", productCode);
+				jsonInput.put("Time Code", timeCode);
+				jsonInput.put("URL", webURL);
+				jsonInput.put("Region Code", regionCode);
+				jsonInput.put("Brand Code", brandCode);
+				jsonInputString.put(jsonInput);
+				paramName[0] = "jsonInputString";
+				paramValue[0] = jsonInputString.toString();
+			}
+			var executeWorkflowTask = docServerManager.executeScript("ExecuteWorkflowTask", paramName, paramValue, userConnInfo);
+			executeWorkflowTask = new JSONObject(executeWorkflowTask);
+			executeWorkflowTask.put("Comments" , comments);
+			return executeWorkflowTask;
+			//instanceCreationFileWriterObj.writeline("Workflow Instance Created for : "+processInstanceKey+" with state Pending Approval");
+			println("## PA End");
+		}
+		else if(currentWFStatus == "Approved"){
+			println("## AP Called");	
+			if(wfTransition == "Approve"){
+				jsonInput.put("System Fields", priceplanSystemFileds);
+				jsonInput.put("Action", "Publish");
+				jsonInput.put("Comments", comments);
+				
+				jsonInput.put("What", what);
+				jsonInput.put("HTMLComments", htmlcomments);
+
+				jsonInput.put("Entity Name", entityName);
+				jsonInput.put("IsNonPostingMarket", IsNonPostingMarket);
+				jsonInput.put("IsFuturePlanning", IsFuturePlanning);
+				jsonInput.put("Product Name", productName);
+				jsonInput.put("Geography Name", geographyName);
+				jsonInput.put("Region Name", regionName);
+				jsonInput.put("Year", year);
+				jsonInput.put("Geography Code", geographyCode);
+				jsonInput.put("Product Code", productCode);
+				jsonInput.put("Time Code", timeCode);
+				jsonInput.put("URL", webURL);
+				jsonInput.put("Region Code", regionCode);
+				jsonInput.put("Brand Code", brandCode);
+				jsonInputString.put(jsonInput);
+				paramName[0] = "jsonInputString";
+				paramValue[0] = jsonInputString.toString();
+			}else if(wfTransition == "Reject"){
+
+				
+				jsonInput.put("System Fields", priceplanSystemFileds);
+				jsonInput.put("Action", "Reject");
+				jsonInput.put("Comments", comments);
+
+				var RejectRecallMsg1 = "&lt;span style='color:red'> &lt;b> Action &lt;/b> &lt;/span>: &lt;b> Price Plan rejected at Level";
+				var RejectRecallMsg2 = "Please review &lt;/b>";
+				
+				jsonInput.put("RejectRecallSubject","ACTION");
+				jsonInput.put("RejectRecallMsg1",RejectRecallMsg1);
+				jsonInput.put("RejectRecallMsg2",RejectRecallMsg2);
+				jsonInput.put("RejectRecallRole",userConnInfo.getRoleName());
+
+				jsonInput.put("What", what);
+				jsonInput.put("HTMLComments", htmlcomments);
+				
+				jsonInput.put("IsNonPostingMarket", IsNonPostingMarket);
+				jsonInput.put("IsFuturePlanning", IsFuturePlanning);
+				
+				jsonInput.put("Entity Name", entityName);
+				jsonInput.put("wfTransition", wfTransition);
+				jsonInput.put("Product Name", productName);
+				jsonInput.put("Geography Name", geographyName);
+				jsonInput.put("Region Name", regionName);
+				jsonInput.put("Year", year);
+				jsonInput.put("Geography Code", geographyCode);
+				jsonInput.put("Product Code", productCode);
+				jsonInput.put("Time Code", timeCode);
+				jsonInput.put("URL", webURL);
+				jsonInput.put("Region Code", regionCode);
+				jsonInput.put("Brand Code", brandCode);
+				jsonInputString.put(jsonInput);
+				paramName[0] = "jsonInputString";
+				paramValue[0] = jsonInputString.toString();
+			}else if(wfTransition == "Recall"){
+				jsonInput.put("System Fields", priceplanSystemFileds);
+				jsonInput.put("Action", "Reject");
+				jsonInput.put("Comments", comments);
+
+				var RejectRecallMsg1 = "Notification: Price Plan has been recalled at Level";
+				var RejectRecallMsg2 = "";
+				
+				jsonInput.put("RejectRecallSubject","NOTIFICATION");
+				jsonInput.put("RejectRecallMsg1",RejectRecallMsg1);
+				jsonInput.put("RejectRecallMsg2",RejectRecallMsg2);
+				jsonInput.put("RejectRecallRole",userConnInfo.getRoleName());
+				
+				jsonInput.put("What", what);
+				jsonInput.put("HTMLComments", htmlcomments);
+				
+				jsonInput.put("IsNonPostingMarket", IsNonPostingMarket);
+				jsonInput.put("IsFuturePlanning", IsFuturePlanning);
+				
+				
+				jsonInput.put("Entity Name", entityName);
+				jsonInput.put("wfTransition", wfTransition);
+				jsonInput.put("Product Name", productName);
+				jsonInput.put("Geography Name", geographyName);
+				jsonInput.put("Region Name", regionName);
+				jsonInput.put("Year", year);
+				jsonInput.put("Geography Code", geographyCode);
+				jsonInput.put("Product Code", productCode);
+				jsonInput.put("Time Code", timeCode);
+				jsonInput.put("URL", webURL);
+				jsonInput.put("Region Code", regionCode);
+				jsonInput.put("Brand Code", brandCode);
+				jsonInputString.put(jsonInput);
+				paramName[0] = "jsonInputString";
+				paramValue[0] = jsonInputString.toString();
+			}
+			println('JSONInput  >>' + jsonInputString.toString() );
+			var executeWorkflowTask = docServerManager.executeScript("ExecuteWorkflowTask", paramName, paramValue, userConnInfo);
+			executeWorkflowTask = new JSONObject(executeWorkflowTask);
+			executeWorkflowTask.put("Comments" , comments);
+			return executeWorkflowTask;
+			//instanceCreationFileWriterObj.writeline("Workflow Instance Created for : "+processInstanceKey+" with state Approved");
+			println("## AP End");
+		}
+		else if(currentWFStatus == "Published"){
+			//println("## Publish Called");	
+			WIP(wfConnectionObj, processDefinitionName, processInstanceKey, localProps, persistantProps, userConnInfo);
+			println("## Publish End");
+		}
+	}
+	catch(e)
+	{
+		println("ERROR in performWorkflowTransition" + e);
+		//var TMTDateStr = formatTMT.format(new Date());
+		//ErrorFileWriterObj.writeline(TMTDateStr + " Workflow instance creation failed for "+processInstanceKey+" with Exception \n"+e);
+		//instanceCreationFileWriterObj.writeline("Workflow instance creation failed for "+processInstanceKey+" with Exception \n"+e);
+	}
+}
+
+
+function WIP(wfConnectionObj, processDefinitionName, processInstanceKey, localProps, persistantProps, userConnInfo)
+{
+	//Save PS
+	println("Inside WIP");
+	//var instanceId = wfConnectionObj.createNewProcessInstance(processDefinitionName, processInstanceKey, localProps, persistantProps, userConnInfo.userName, userConnInfo);
+	var instanceId = wfConnectionObj.createNewProcessInstance(processDefinitionName, processInstanceKey, localProps, persistantProps, null, userConnInfo);
+	
+	
+	//println("Instance Created");
+	
+	var activeNodesInfo = wfConnectionObj.getActiveNodes(processDefinitionName, processInstanceKey);
+	
+	//println("getActiveNodes");
+	
+	var actNodeInfo = activeNodesInfo[0];
+	var outGoingTransition = actNodeInfo.getOutgoingTransitions()[0];
+	var activeNodeId = actNodeInfo.getNodeId();
+	
+	var exeTranResult = wfConnectionObj.executeTransition(instanceId, activeNodeId, outGoingTransition, localProps, persistantProps, userConnInfo);
+	
+	//println("executeTransition");
+}
+
+function Recall(wfConnectionObj, processDefinitionName, processInstanceKey, localProps, userConnInfo)
+{
+	
+	println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@executeTransition for Recall");
+	var activeNodesInfo = wfConnectionObj.getActiveNodes(processDefinitionName, processInstanceKey);
+	
+	var actNodeInfo = activeNodesInfo[0];
+	var outGoingTransition = actNodeInfo.getOutgoingTransitions()[0];
+	var activeNodeId = actNodeInfo.getNodeId();
+	instanceId = actNodeInfo.getInstanceId();
+	
+	var persistantProps = wfConnectionObj.getContextVariables(instanceId);
+	println("outGoingTransition > " + outGoingTransition);
+	println("persistantProps > "+persistantProps);
+	
+	persistantProps.put("isRejectFlg", false);
+	
+	var exeTranResult = wfConnectionObj.executeTransition(instanceId, activeNodeId, outGoingTransition, localProps, persistantProps, userConnInfo);
+	persistantProps = wfConnectionObj.getContextVariables(instanceId);
+	currentState = persistantProps.get("CurrentState");
+	println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@executeTransition for Submit Completed");
+	return "";
+}
+
+
+function getMastersScope(PSDefinitionName, scope, configuredMasterArray) {
+  println("scope :"+scope);
+  var ScopeObj = new JSONObject();
+  var extPrimaryKeyObj = new JSONObject();
+  var configuredMasterArrayLen = configuredMasterArray.length();
+  for(var masterItr = 0; masterItr &lt; configuredMasterArrayLen; masterItr++) {
+    var curMasterName = configuredMasterArray.get(masterItr);
+	if(curMasterName.equals("ProductMaster")) {
+		//curMasterName = "PricingGroupMaster";
+		curMasterName = "PC_BRAND_MASTER";
+	}
+    var priKeyArr = new JSONArray();
+    var priKeyObj = new JSONObject();
+	println("curMasterName > " + curMasterName);
+    var curPrimaryKey = getPrimaryKeyNameFromMaster(PSDefinitionName, curMasterName);
+	println("curPrimaryKey > " + curPrimaryKey);
+    priKeyObj.put("Code", scope.get(curPrimaryKey));
+    priKeyObj.put("Level", scope.get(curPrimaryKey + " Level"));
+    priKeyArr.put(priKeyObj);
+    extPrimaryKeyObj.put(curMasterName, priKeyArr);
+  }
+  //ScopeObj.put("Scope", extPrimaryKeyObj);
+	//println("############################extPrimaryKeyObj : "+extPrimaryKeyObj);
+  return extPrimaryKeyObj;
+}
+
+function getPrimaryKeyNameFromMaster(PSDefinitionName, MasterName)
+{
+
+  var primaryKeyInfo = g_GetPrimaryKeys(PSDefinitionName).get("Keys");
+  //println("primaryKeyInfo > " + primaryKeyInfo);
+  if(primaryKeyInfo != null &amp;&amp; JSONObject.NULL != primaryKeyInfo) 
+  {
+    var primaryKeyInfoLength = primaryKeyInfo.length();
+    for(var i=0;i &lt; primaryKeyInfoLength; i++) 
+    {
+      var primaryInfo = primaryKeyInfo.get(i);
+      var primaryKeyCode = primaryInfo.get("Master");
+      
+      if(primaryKeyCode.equals(MasterName)) 
+      {
+        return primaryInfo.get("Name");
+      }
+    }
+  }
+}
+
+</pre>
+    </article>
+</section>
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+
+	<span class="copyright">
+	Copyright  Vistaar © 2012-2015
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a>
+	
+		on Thu Dec 1st 2016
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>

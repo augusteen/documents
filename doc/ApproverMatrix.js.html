@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>Gallo Source: ApproverMatrix.js</title>
+<script src="scripts/jquery.js"></script>
+    <script src="scripts/rawdeflate.js"></script>
+    <script src="scripts/jquery_plantuml.js"></script>
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.cerulean.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html"><img class="branding-logo" src="img/Vistaar-Logo.png"
+		alt="logo"/>Gallo</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="WebUI.html">WebUI</a></li><li><a href="Workflow.html">Workflow</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="module-ApproverMatrix.html">ApproverMatrix</a></li><li><a href="module-CreatorMatrix.html">CreatorMatrix</a></li><li><a href="module-GWF_Normalize.html">GWF_Normalize</a></li><li><a href="module-WF_Execution.html">WF_Execution</a></li><li><a href="module-WF_NS_PriceStructure.html">WF_NS_PriceStructure</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="ExportPricePlan.html">ExportPricePlan</a></li><li><a href="WebUI.PricePlanBestPracticesManager.html">WebUI.PricePlanBestPracticesManager</a></li><li><a href="WebUI.PricePlanFinderManager.html">WebUI.PricePlanFinderManager</a></li><li><a href="WF_NS_PS_Generic.html">WF_NS_PS_Generic</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+			
+
+		<h1 class="page-title">Source: ApproverMatrix.js</h1>
+    
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">/** 
+ * @fileOverview This files contain Approver Matrix functions for BRMS Approver deployment
+ * @author anadar
+ * @version 1.0.0
+ */
+
+
+/**
+ * @module ApproverMatrix
+ */
+importPackage(com.vistaar.docserver.util);
+importPackage(org.json);
+importPackage(java.lang);
+
+/*
+
+The script to add Approver Matrix
+ */
+
+var inpRoles = new org.json.JSONArray(docServerManager.getAllRolesDetails());
+var BRMSConnector = VistaarJSUtils.getBRMSConnector(userConnInfo);
+
+/*
+
+Commenting out delete RuleBundles
+var rulebundlesCodes= new Array ();
+rulebundlesCodes[0] = "CWF_RB";
+BRMSConnector.deleteRuleBundles(rulebundlesCodes) ;
+
+var retVal = BRMSConnector.createRuleBundle("DOA_ApproverMatrix_RB","CWF_RB");
+println("Returned Value is" + retVal);
+
+var arrRuleSetName=[];
+
+BRMSConnector.addRuleSet("DOA_ApproverMatrix_RB", "CWF_ApproverMatrix_DT");
+BRMSConnector.addRuleSet("DOA_ApproverMatrix_RB", "Default Approver Setup");
+BRMSConnector.addRuleSet("DOA_ApproverMatrix_RB", "CWF_Common");
+
+*/
+
+var ApproverMatrix = "CWF_ApproverMatrix_DT";
+var creatorRuleSetObject = BRMSConnector.loadRuleSet(ApproverMatrix);
+
+//println("\n\n\n\n=========creatorRuleSet"+creatorRuleSet);
+var creatorRuleSetObjectJSON = new org.json.JSONObject(creatorRuleSetObject.toString());
+creatorRuleSetObjectJSON.get("DecisionTableInfo").put("Data", []);
+
+addToCreatorMatrix(inpRoles, creatorRuleSetObjectJSON);
+var CreatorMatrixRuleSet = new com.vistaar.rules.dataObjects.RuleSet(creatorRuleSetObjectJSON.toString());
+BRMSConnector.saveRuleSet(CreatorMatrixRuleSet);
+
+var retVal = BRMSConnector.registerRules("DOA_ApproverMatrix_RB", 1, true);
+
+println("Returned Value is" + retVal);
+
+output = "success";
+
+function addToCreatorMatrix(inpRoles, CreatorMatrix_DT) {
+    try {
+        var ruleSetData = JSON.parse(CreatorMatrix_DT.get("DecisionTableInfo").get("Data"));
+
+        var l_inpRolesLen = inpRoles.length();
+        var l_role = null;
+        for (var roleItr = 0; roleItr &lt; l_inpRolesLen; roleItr++) {
+            l_role = String(inpRoles.get(roleItr).get("roleName"));
+            //if(l_role=="Administrator" || l_role=="ADMIN-ALL GEOGRAPHY-ALL")
+            if (l_role == "ADMIN-ALL GEOGRAPHY-ALL") {
+                var tempAP1 = ["PricePlan", "All Geography", "All Geography", "All Product", "All Product", true, "Level1", null, "", ""];
+                var tempAP2 = ["PricePlan", "All Geography", "All Geography", "All Product", "All Product", true, "Level2", null, "", ""];
+                var tempAP3 = ["PricePlan", "All Geography", "All Geography", "All Product", "All Product", true, "Level3", null, "", ""];
+                tempAP1[8] = tempAP2[8] = tempAP3[8] = l_role;
+                addRuleName(tempAP1, l_role);
+                addRuleName(tempAP2, l_role);
+                addRuleName(tempAP3, l_role);
+                ruleSetData.push(tempAP1);
+                ruleSetData.push(tempAP2);
+                ruleSetData.push(tempAP3);
+                createApprover(tempAP3[9], l_role);
+                continue;
+            }
+            var l_roleSplitArr = l_role.split("-");
+            var l_cust = l_roleSplitArr[0];
+
+            if (l_cust == "AP1" || l_cust == "AP2" || l_cust == "AP3") {
+                var geographyArr = l_roleSplitArr[1].split("_");
+                var productArr = l_roleSplitArr[2].split("_");
+                var geographyArrLen = geographyArr.length;
+                var productArrLen = productArr.length;
+                var l_ruleName;
+                for (var geoItr = 0; geoItr &lt; geographyArrLen; geoItr++) {
+                    var CreatorMatrixEntry = ["PricePlan", "", "", "", "", true, "", null, "", ""];
+                    CreatorMatrixEntry[8] = l_role;
+                    addLevel(CreatorMatrixEntry, l_cust);
+                    addRuleName(CreatorMatrixEntry, l_role);
+                    l_ruleName = CreatorMatrixEntry[9];
+                    var geog = geographyArr[geoItr];
+                    addGeography(CreatorMatrixEntry, geog);
+                    for (var prodItr = 0; prodItr &lt; productArrLen; prodItr++) {
+                        var finalCreatorMatrixEntry = JSON.parse(JSON.stringify(CreatorMatrixEntry));
+                        var prod = productArr[prodItr];
+                        addProduct(finalCreatorMatrixEntry, prod);
+                        ruleSetData.push(finalCreatorMatrixEntry);
+                    }
+                }
+
+
+                println("Creating Approver Ruleset");
+
+                createApprover(l_ruleName, l_role);
+
+            }
+        }
+        CreatorMatrix_DT.get("DecisionTableInfo").put("Data", ruleSetData);
+    } catch (err) {
+        println('Failed to delete Ruleset ' + err);
+    }
+
+}
+
+function createApprover(p_ruleName, p_RoleName) {
+    try {
+
+        var isDeletedRuleSet = deleteDeleteRuleSet(p_ruleName);
+
+        if (isDeletedRuleSet) {
+
+            var conditionalRuleSet = BRMSConnector.createRuleSet(p_ruleName, p_ruleName, "Decision Table", "CWF_DOA_Template");
+
+            var approver = fetchApproverRules(p_RoleName);
+
+            println("Approver" + approver);
+
+            println(conditionalRuleSet.toString());
+
+            //var ruleSetData = JSON.parse(conditionalRuleSet.get("DecisionTableInfo").get("Data"));
+
+            //conditionalRuleSet.get("DecisionTableInfo").get("Data").push(JSON.parse(approver));
+            conditionalRuleSet.get("DecisionTableInfo").put("Data", JSON.parse(approver));
+
+            conditionalRuleSet.put("Content", null);
+
+            println(conditionalRuleSet.toString());
+
+            var conditionalRuleSetObj = new com.vistaar.rules.dataObjects.RuleSet(conditionalRuleSet.toString());
+
+            BRMSConnector.saveRuleSet(conditionalRuleSetObj);
+
+            BRMSConnector.addRuleSet("DOA_ApproverMatrix_RB", p_ruleName);
+
+        }
+    } catch (err) {
+        println('Failed to delete Ruleset ' + err);
+    }
+}
+
+function deleteDeleteRuleSet(p_ruleName) {
+
+    try {
+        var arr = [];
+        arr.push(p_ruleName);
+        BRMSConnector.deleteRuleSets(arr);
+
+        return true;
+    } catch (err) {
+        println('Failed to delete Ruleset ' + err);
+        return false;
+    }
+
+}
+
+function fetchApproverRules(p_RoleName) {
+    try {
+        var AP1 = '[["Level1","ROLENAME",null,null,null,null,null,null,null,null,null,null,null,null,"ROLENAME"]]';
+
+        var AP2 = '[["Level2", "ROLENAME", "this.Level==\\"Deal\\" &amp;&amp; getDiffByType(this.Proposed.Net_FOB, this.Parent[this.Channels].MIN_NET_FOB_GUIDLINE, this.Parent[this.Channels].MIN_FOB_VS_GUIDANCE_THRESHOLD.UOM)", ">=", "this.Parent[this.Channels].MIN_FOB_VS_GUIDANCE_THRESHOLD[\\"Level 2\\"]", null, null, null, null, null, null, null, null, null, "Level2 Priceline NET FOB is below Min FOB guidance"],["Level2", "ROLENAME", "this.Level==\\"Deal\\" &amp;&amp; getDiffByType(this.Parent.Parent[this.Channels].AVG_FOB_PROPOSED_CALCULATED, this.Parent.Parent[this.Channels].AVG_FOB_GUIDLINE, this.Parent.Parent[this.Channels].AVG_FOB_VS_GUIDANCE_THRESHOLD.UOM)", ">=", "this.Parent.Parent[this.Channels].AVG_FOB_VS_GUIDANCE_THRESHOLD[\\"Level 2\\"]", null, null, null, null, null, null, null, null, null, "Level2 Avg. full year Net FOB at Pricecat level is below Avg FOB guidance"],["Level2", "ROLENAME", "this.Level==\\"Deal\\" &amp;&amp; getDiffByType(this.Parent.Parent[this.Channels].AVG_FOB_PROPOSED_CALCULATED, this.Parent.Parent[this.Channels].AVG_FOB_PREVIOUS_YEAR_CALCULATED, this.Parent.Parent[this.Channels].AVG_FOB_VS_PRIOR_YEAR_THRESHOLD.UOM)", ">=", "this.Parent.Parent[this.Channels].AVG_FOB_VS_PRIOR_YEAR_THRESHOLD[\\"Level 2\\"]", null, null, null, null, null, null, null, null, null, "Level2 Avg. full year Net FOB at Pricecat level is below Last Year"],["Level2", "ROLENAME", "this.Level==\\"Deal\\" &amp;&amp; getDiffByType(this.Proposed.Net_List_ATAX, this.Parent[this.Channels].MIN_NET_LIST_GUIDLINE, this.Parent[this.Channels].MIN_NETLIST_VS_GUIDANCE_THRESHOLD.UOM)", ">=", "this.Parent[this.Channels].MIN_NETLIST_VS_GUIDANCE_THRESHOLD[\\"Level 2\\"]", null, null, null, null, null, null, null, null, null, "Level2 NET List is below Min Net List guidance."],["Level2", "ROLENAME", "this.Level==\\"Deal\\" &amp;&amp; getDiffByType(this.Proposed.Net_FOB, this.Parent.Parent[this.Channels].MinCurrentNetFOB, this.Parent.Parent[this.Channels][\\"DEEPEST_FOB_THRESHOLD\\"].UOM)", ">=", "this.Parent.Parent[this.Channels][\\"DEEPEST_FOB_THRESHOLD\\"][\\"Level 2\\"]", null, null, null, null, null, null, null, null, null, "Level2 Proposed priceline is deeper (NET FOB) than any current."],["Level2", "ROLENAME", "this.Level==\\"Deal\\" &amp;&amp; getDiffByType(this.Proposed.Net_List_ATAX, this.Parent.Parent[this.Channels].MinCurrentNetList, this.Parent.Parent[this.Channels][\\"DEEPEST_NETLIST_THRESHOLD\\"].UOM)", ">=", "this.Parent.Parent[this.Channels][\\"DEEPEST_NETLIST_THRESHOLD\\"][\\"Level 2\\"]", null, null, null, null, null, null, null, null, null, "Level2 Proposed priceline is deeper Net List than any current."],["Level2", "ROLENAME", "this.Level==\\"Deal\\" &amp;&amp; getDiffByType(this.Proposed.RAB, this.Parent[this.Channels].MIN_RAB_GUIDLINE, this.Parent[this.Channels].MIN_RAB_VS_GUIDANCE_THRESHOLD.UOM)", ">=", "this.Parent[this.Channels].MIN_RAB_VS_GUIDANCE_THRESHOLD[\\"Level 2\\"]", null, null, null, null, null, null, null, null, null, "Level2 Priceline RAB is below guidance"],["Level2", "ROLENAME", "this.Level==\\"Deal\\" &amp;&amp; getDiffByType(this.Parent.Parent[this.Channels].AVG_FOB_PROPOSED_CALCULATED, this.Parent.Parent[this.Channels].AVG_FOB_CURRENT_CALCULATED, this.Parent.Parent[this.Channels].AVG_FOB_DECREASE_THRESHOLD.UOM)", ">=", "this.Parent.Parent[this.Channels].AVG_FOB_DECREASE_THRESHOLD[\\"Level 2\\"]", null, null, null, null, null, null, null, null, null, "Level2 Current FOB comparison"],["Level2", "ROLENAME", "this.Level==\\"Summary\\" &amp;&amp; this.isPermissionCheckOnly", "==", "true", null, null, null, null, null, null, null, null, null, "By Pass Threshold"]]';
+
+        var AP3 = '[["Level3", "ROLENAME", "this.Level==\\"Deal\\" &amp;&amp; getDiffByType(this.Proposed.Net_FOB, this.Parent[this.Channels].MIN_NET_FOB_GUIDLINE, this.Parent[this.Channels].MIN_FOB_VS_GUIDANCE_THRESHOLD.UOM)", ">=", "this.Parent[this.Channels].MIN_FOB_VS_GUIDANCE_THRESHOLD[\\"Level 3\\"]", null, null, null, null, null, null, null, null, null, "Level3 Priceline NET FOB is below Min FOB guidance"],["Level3", "ROLENAME", "this.Level==\\"Deal\\" &amp;&amp; getDiffByType(this.Parent.Parent[this.Channels].AVG_FOB_PROPOSED_CALCULATED, this.Parent.Parent[this.Channels].AVG_FOB_GUIDLINE, this.Parent.Parent[this.Channels].AVG_FOB_VS_GUIDANCE_THRESHOLD.UOM)", ">=", "this.Parent.Parent[this.Channels].AVG_FOB_VS_GUIDANCE_THRESHOLD[\\"Level 3\\"]", null, null, null, null, null, null, null, null, null, "Level3 Avg. full year Net FOB at Pricecat level is below Avg FOB guidance"],["Level3", "ROLENAME", "this.Level==\\"Deal\\" &amp;&amp; getDiffByType(this.Parent.Parent[this.Channels].AVG_FOB_PROPOSED_CALCULATED, this.Parent.Parent[this.Channels].AVG_FOB_PREVIOUS_YEAR_CALCULATED, this.Parent.Parent[this.Channels].AVG_FOB_VS_PRIOR_YEAR_THRESHOLD.UOM)", ">=", "this.Parent.Parent[this.Channels].AVG_FOB_VS_PRIOR_YEAR_THRESHOLD[\\"Level 3\\"]", null, null, null, null, null, null, null, null, null, "Level3 Avg. full year Net FOB at Pricecat level is below Last Year"],["Level3", "ROLENAME", "this.Level==\\"Deal\\" &amp;&amp; getDiffByType(this.Proposed.Net_List_ATAX, this.Parent[this.Channels].MIN_NET_LIST_GUIDLINE, this.Parent[this.Channels].MIN_NETLIST_VS_GUIDANCE_THRESHOLD.UOM)", ">=", "this.Parent[this.Channels].MIN_NETLIST_VS_GUIDANCE_THRESHOLD[\\"Level 3\\"]", null, null, null, null, null, null, null, null, null, "Level3 NET List is below Min Net List guidance."],["Level3", "ROLENAME", "this.Level==\\"Deal\\" &amp;&amp; getDiffByType(this.Proposed.Net_FOB, this.Parent.Parent[this.Channels].MinCurrentNetFOB, this.Parent.Parent[this.Channels][\\"DEEPEST_FOB_THRESHOLD\\"].UOM)", ">=", "this.Parent.Parent[this.Channels][\\"DEEPEST_FOB_THRESHOLD\\"][\\"Level 3\\"]", null, null, null, null, null, null, null, null, null, "Level3 Proposed priceline is deeper (NET FOB) than any current."],["Level3", "ROLENAME", "this.Level==\\"Deal\\" &amp;&amp; getDiffByType(this.Proposed.Net_List_ATAX, this.Parent.Parent[this.Channels].MinCurrentNetList, this.Parent.Parent[this.Channels][\\"DEEPEST_NETLIST_THRESHOLD\\"].UOM)", ">=", "this.Parent.Parent[this.Channels][\\"DEEPEST_NETLIST_THRESHOLD\\"][\\"Level 3\\"]", null, null, null, null, null, null, null, null, null, "Level3 Proposed priceline is deeper Net List."],["Level3", "ROLENAME", "this.Level==\\"Deal\\" &amp;&amp; getDiffByType(this.Proposed.RAB, this.Parent[this.Channels].MIN_RAB_GUIDLINE, this.Parent[this.Channels].MIN_RAB_VS_GUIDANCE_THRESHOLD.UOM)", ">=", "this.Parent[this.Channels].MIN_RAB_VS_GUIDANCE_THRESHOLD[\\"Level 3\\"]", null, null, null, null, null, null, null, null, null, "Level3 Priceline RAB is below guidance"],["Level3", "ROLENAME", "this.Level==\\"Deal\\" &amp;&amp; getDiffByType(this.Parent.Parent[this.Channels].AVG_FOB_PROPOSED_CALCULATED, this.Parent.Parent[this.Channels].AVG_FOB_CURRENT_CALCULATED, this.Parent.Parent[this.Channels].AVG_FOB_DECREASE_THRESHOLD.UOM)", ">=", "this.Parent.Parent[this.Channels].AVG_FOB_DECREASE_THRESHOLD[\\"Level 3\\"]", null, null, null, null, null, null, null, null, null, "Level3 Current FOB comparison"],["Level3", "ROLENAME", "this.Level==\\"Summary\\" &amp;&amp; this.isPermissionCheckOnly", "==", "true", null, null, null, null, null, null, null, null, null, "By Pass Threshold"]]';
+
+
+        var l_Admin = '[["Level1","ROLENAME",null,null,null,null,null,null,null,null,null,null,null,null,"ROLENAME"],["Level2", "ROLENAME", "this.Level==\\"Deal\\" &amp;&amp; getDiffByType(this.Proposed.Net_FOB, this.Parent[this.Channels].MIN_NET_FOB_GUIDLINE, this.Parent[this.Channels].MIN_FOB_VS_GUIDANCE_THRESHOLD.UOM)", ">=", "this.Parent[this.Channels].MIN_FOB_VS_GUIDANCE_THRESHOLD[\\"Level 2\\"]", null, null, null, null, null, null, null, null, null, "Level2 Priceline NET FOB is below Min FOB guidance"],["Level2", "ROLENAME", "this.Level==\\"Deal\\" &amp;&amp; getDiffByType(this.Parent.Parent[this.Channels].AVG_FOB_PROPOSED_CALCULATED, this.Parent.Parent[this.Channels].AVG_FOB_GUIDLINE, this.Parent.Parent[this.Channels].AVG_FOB_VS_GUIDANCE_THRESHOLD.UOM)", ">=", "this.Parent.Parent[this.Channels].AVG_FOB_VS_GUIDANCE_THRESHOLD[\\"Level 2\\"]", null, null, null, null, null, null, null, null, null, "Level2 Avg. full year Net FOB at Pricecat level is below Avg FOB guidance"],["Level2", "ROLENAME", "this.Level==\\"Deal\\" &amp;&amp; getDiffByType(this.Parent.Parent[this.Channels].AVG_FOB_PROPOSED_CALCULATED, this.Parent.Parent[this.Channels].AVG_FOB_PREVIOUS_YEAR_CALCULATED, this.Parent.Parent[this.Channels].AVG_FOB_VS_PRIOR_YEAR_THRESHOLD.UOM)", ">=", "this.Parent.Parent[this.Channels].AVG_FOB_VS_PRIOR_YEAR_THRESHOLD[\\"Level 2\\"]", null, null, null, null, null, null, null, null, null, "Level2 Avg. full year Net FOB at Pricecat level is below Last Year"],["Level2", "ROLENAME", "this.Level==\\"Deal\\" &amp;&amp; getDiffByType(this.Proposed.Net_List_ATAX, this.Parent[this.Channels].MIN_NET_LIST_GUIDLINE, this.Parent[this.Channels].MIN_NETLIST_VS_GUIDANCE_THRESHOLD.UOM)", ">=", "this.Parent[this.Channels].MIN_NETLIST_VS_GUIDANCE_THRESHOLD[\\"Level 2\\"]", null, null, null, null, null, null, null, null, null, "Level2 NET List is below Min Net List guidance."],["Level2", "ROLENAME", "this.Level==\\"Deal\\" &amp;&amp; getDiffByType(this.Proposed.Net_FOB, this.Parent.Parent[this.Channels].MinCurrentNetFOB, this.Parent.Parent[this.Channels][\\"DEEPEST_FOB_THRESHOLD\\"].UOM)", ">=", "this.Parent.Parent[this.Channels][\\"DEEPEST_FOB_THRESHOLD\\"][\\"Level 2\\"]", null, null, null, null, null, null, null, null, null, "Level2 Proposed priceline is deeper (NET FOB) than any current."],["Level2", "ROLENAME", "this.Level==\\"Deal\\" &amp;&amp; getDiffByType(this.Proposed.Net_List_ATAX, this.Parent.Parent[this.Channels].MinCurrentNetList, this.Parent.Parent[this.Channels][\\"DEEPEST_NETLIST_THRESHOLD\\"].UOM)", ">=", "this.Parent.Parent[this.Channels][\\"DEEPEST_NETLIST_THRESHOLD\\"][\\"Level 2\\"]", null, null, null, null, null, null, null, null, null, "Level2 Proposed priceline is deeper (NET FOB or Net List) than any current First condition."],["Level2", "ROLENAME", "this.Level==\\"Deal\\" &amp;&amp; getDiffByType(this.Proposed.RAB, this.Parent[this.Channels].MIN_RAB_GUIDLINE, this.Parent[this.Channels].MIN_RAB_VS_GUIDANCE_THRESHOLD.UOM)", ">=", "this.Parent[this.Channels].MIN_RAB_VS_GUIDANCE_THRESHOLD[\\"Level 2\\"]", null, null, null, null, null, null, null, null, null, "Level2 Priceline RAB is below guidance"],["Level2", "ROLENAME", "this.Level==\\"Deal\\" &amp;&amp; getDiffByType(this.Parent.Parent[this.Channels].AVG_FOB_PROPOSED_CALCULATED, this.Parent.Parent[this.Channels].AVG_FOB_CURRENT_CALCULATED, this.Parent.Parent[this.Channels].AVG_FOB_DECREASE_THRESHOLD.UOM)", ">=", "this.Parent.Parent[this.Channels].AVG_FOB_DECREASE_THRESHOLD[\\"Level 2\\"]", null, null, null, null, null, null, null, null, null, "Level2 Current FOB comparison"],["Level2", "ROLENAME", "this.Level==\\"Summary\\" &amp;&amp; this.isPermissionCheckOnly", "==", "true", null, null, null, null, null, null, null, null, null, "By Pass Threshold"],["Level3", "ROLENAME", "this.Level==\\"Deal\\" &amp;&amp; getDiffByType(this.Proposed.Net_FOB, this.Parent[this.Channels].MIN_NET_FOB_GUIDLINE, this.Parent[this.Channels].MIN_FOB_VS_GUIDANCE_THRESHOLD.UOM)", ">=", "this.Parent[this.Channels].MIN_FOB_VS_GUIDANCE_THRESHOLD[\\"Level 3\\"]", null, null, null, null, null, null, null, null, null, "Level3 Priceline NET FOB is below Min FOB guidance"],["Level3", "ROLENAME", "this.Level==\\"Deal\\" &amp;&amp; getDiffByType(this.Parent.Parent[this.Channels].AVG_FOB_PROPOSED_CALCULATED, this.Parent.Parent[this.Channels].AVG_FOB_GUIDLINE, this.Parent.Parent[this.Channels].AVG_FOB_VS_GUIDANCE_THRESHOLD.UOM)", ">=", "this.Parent.Parent[this.Channels].AVG_FOB_VS_GUIDANCE_THRESHOLD[\\"Level 3\\"]", null, null, null, null, null, null, null, null, null, "Level3 Avg. full year Net FOB at Pricecat level is below Avg FOB guidance"],["Level3", "ROLENAME", "this.Level==\\"Deal\\" &amp;&amp; getDiffByType(this.Parent.Parent[this.Channels].AVG_FOB_PROPOSED_CALCULATED, this.Parent.Parent[this.Channels].AVG_FOB_PREVIOUS_YEAR_CALCULATED, this.Parent.Parent[this.Channels].AVG_FOB_VS_PRIOR_YEAR_THRESHOLD.UOM)", ">=", "this.Parent.Parent[this.Channels].AVG_FOB_VS_PRIOR_YEAR_THRESHOLD[\\"Level 3\\"]", null, null, null, null, null, null, null, null, null, "Level3 Avg. full year Net FOB at Pricecat level is below Last Year"],["Level3", "ROLENAME", "this.Level==\\"Deal\\" &amp;&amp; getDiffByType(this.Proposed.Net_List_ATAX, this.Parent[this.Channels].MIN_NET_LIST_GUIDLINE, this.Parent[this.Channels].MIN_NETLIST_VS_GUIDANCE_THRESHOLD.UOM)", ">=", "this.Parent[this.Channels].MIN_NETLIST_VS_GUIDANCE_THRESHOLD[\\"Level 3\\"]", null, null, null, null, null, null, null, null, null, "Level3 NET List is below then Min Net List guidance."],["Level3", "ROLENAME", "this.Level==\\"Deal\\" &amp;&amp; getDiffByType(this.Proposed.Net_FOB, this.Parent.Parent[this.Channels].MinCurrentNetFOB, this.Parent.Parent[this.Channels][\\"DEEPEST_FOB_THRESHOLD\\"].UOM)", ">=", "this.Parent.Parent[this.Channels][\\"DEEPEST_FOB_THRESHOLD\\"][\\"Level 3\\"]", null, null, null, null, null, null, null, null, null, "Level3 Proposed priceline is deeper (NET FOB) than any current."],["Level3", "ROLENAME", "this.Level==\\"Deal\\" &amp;&amp; getDiffByType(this.Proposed.Net_List_ATAX, this.Parent.Parent[this.Channels].MinCurrentNetList, this.Parent.Parent[this.Channels][\\"DEEPEST_NETLIST_THRESHOLD\\"].UOM)", ">=", "this.Parent.Parent[this.Channels][\\"DEEPEST_NETLIST_THRESHOLD\\"][\\"Level 3\\"]", null, null, null, null, null, null, null, null, null, "Level3 Proposed priceline is deeper Net List than any current."],["Level3", "ROLENAME", "this.Level==\\"Deal\\" &amp;&amp; getDiffByType(this.Proposed.RAB, this.Parent[this.Channels].MIN_RAB_GUIDLINE, this.Parent[this.Channels].MIN_RAB_VS_GUIDANCE_THRESHOLD.UOM)", ">=", "this.Parent[this.Channels].MIN_RAB_VS_GUIDANCE_THRESHOLD[\\"Level 3\\"]", null, null, null, null, null, null, null, null, null, "Level3 Priceline RAB is below guidance"],["Level3", "ROLENAME", "this.Level==\\"Deal\\" &amp;&amp; getDiffByType(this.Parent.Parent[this.Channels].AVG_FOB_PROPOSED_CALCULATED, this.Parent.Parent[this.Channels].AVG_FOB_CURRENT_CALCULATED, this.Parent.Parent[this.Channels].AVG_FOB_DECREASE_THRESHOLD.UOM)", ">=", "this.Parent.Parent[this.Channels].AVG_FOB_DECREASE_THRESHOLD[\\"Level 3\\"]", null, null, null, null, null, null, null, null, null, "Level3 Current FOB comparison"],["Level3", "ROLENAME", "this.Level==\\"Summary\\" &amp;&amp; this.isPermissionCheckOnly", "==", "true", null, null, null, null, null, null, null, null, null, "By Pass Threshold"]]';
+
+        var l_roleSplitArr = p_RoleName.split("-");
+        var l_cust = l_roleSplitArr[0];
+
+        if (l_cust == "AP3") {
+            var regRoleName = RegExp(/ROLENAME/g);
+            AP3 = AP3.replace(regRoleName, p_RoleName);
+            return AP3;
+        } else if (l_cust == "AP2") {
+            var regRoleName = RegExp(/ROLENAME/g);
+            AP2 = AP2.replace(regRoleName, p_RoleName);
+            return AP2;
+        } else if (l_cust == "AP1") {
+            var regRoleName = RegExp(/ROLENAME/g);
+            AP1 = AP1.replace(regRoleName, p_RoleName);
+            return AP1;
+        } else if (l_cust == "ADMIN" || l_cust == "Administrator") {
+            var regRoleName = RegExp(/ROLENAME/g);
+            l_Admin = l_Admin.replace(regRoleName, p_RoleName);
+            return l_Admin;
+        }
+    } catch (err) {
+        println('Failed to delete Ruleset ' + err);
+    }
+}
+
+function addGeography(CreatorMatrixEntry, geog) {
+    if (geog == "ALL GEOGRAPHY") {
+        CreatorMatrixEntry[1] = "All Geography";
+        CreatorMatrixEntry[2] = "All Geography";
+    } else if (geog.charAt(0) == "S") {
+        CreatorMatrixEntry[1] = "State";
+        CreatorMatrixEntry[2] = geog;
+    } else if (geog.charAt(0) == "R") {
+        CreatorMatrixEntry[1] = "Region";
+        CreatorMatrixEntry[2] = geog;
+    } else {
+        throw "GEOGRAPHY LEVEL is not supported";
+    }
+}
+
+function addProduct(CreatorMatrixEntry, prod) {
+    if (prod == "ALL") {
+        CreatorMatrixEntry[3] = "All Product";
+        CreatorMatrixEntry[4] = "All Product";
+    } else {
+        CreatorMatrixEntry[3] = "Business Unit";
+        CreatorMatrixEntry[4] = prod;
+    }
+}
+
+function addLevel(CreatorMatrixEntry, l_cust) {
+    if (l_cust == "AP1") {
+        CreatorMatrixEntry[6] = "Level1";
+    } else if (l_cust == "AP2") {
+        CreatorMatrixEntry[6] = "Level2";
+    } else {
+        CreatorMatrixEntry[6] = "Level3";
+    }
+}
+
+function addRuleName(CreatorMatrixEntry, l_role) {
+    var rgUnderscoe = RegExp(/-/g);
+    var l_rulename = l_role.replace(rgUnderscoe, "_");
+    l_rulename = l_rulename.replace("Geography", "Geo");
+    CreatorMatrixEntry[9] = l_rulename + "_Ruleset";
+}
+</pre>
+    </article>
+</section>
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+
+	<span class="copyright">
+	Copyright  Vistaar © 2012-2015
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a>
+	
+		on Thu Dec 1st 2016
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>

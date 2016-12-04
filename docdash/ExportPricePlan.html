@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>ExportPricePlan - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <script src="scripts/jquery.js"></script>
+    <script src="scripts/rawdeflate.js"></script>
+    <script src="scripts/jquery_plantuml.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ExportPricePlan.html">ExportPricePlan</a><ul class='methods'><li data-type='method'><a href="ExportPricePlan.html#BuildObjectForReport">BuildObjectForReport</a></li><li data-type='method'><a href="ExportPricePlan.html#BuildReport">BuildReport</a></li><li data-type='method'><a href="ExportPricePlan.html#BuildReportDataFromUI">BuildReportDataFromUI</a></li><li data-type='method'><a href="ExportPricePlan.html#fetchPricePlan">fetchPricePlan</a></li><li data-type='method'><a href="ExportPricePlan.html#getCSVData">getCSVData</a></li><li data-type='method'><a href="ExportPricePlan.html#getReport">getReport</a></li><li data-type='method'><a href="ExportPricePlan.html#initModule">initModule</a></li></ul></li><li><a href="WebUI.PricePlanBestPracticesManager.html">PricePlanBestPracticesManager</a><ul class='methods'><li data-type='method'><a href="WebUI.PricePlanBestPracticesManager.html#evalBestPractice">evalBestPractice</a></li><li data-type='method'><a href="WebUI.PricePlanBestPracticesManager.html#initializeModuleObjects">initializeModuleObjects</a></li><li data-type='method'><a href="WebUI.PricePlanBestPracticesManager.html#lookupChildForBestPractices">lookupChildForBestPractices</a></li><li data-type='method'><a href="WebUI.PricePlanBestPracticesManager.html#lookupForAvgBestPractice">lookupForAvgBestPractice</a></li><li data-type='method'><a href="WebUI.PricePlanBestPracticesManager.html#lookupGridForBestPractice">lookupGridForBestPractice</a></li><li data-type='method'><a href="WebUI.PricePlanBestPracticesManager.html#show">show</a></li></ul></li><li><a href="WebUI.PricePlanFinderManager.html">PricePlanFinderManager</a></li><li><a href="WF_NS_PS_Generic.html">WF_NS_PS_Generic</a><ul class='methods'><li data-type='method'><a href="WF_NS_PS_Generic.html#.ApprovalDecision_NodeEnter">ApprovalDecision_NodeEnter</a></li><li data-type='method'><a href="WF_NS_PS_Generic.html#.ApprovalDecision_NodeEnter_Execute">ApprovalDecision_NodeEnter_Execute</a></li><li data-type='method'><a href="WF_NS_PS_Generic.html#.Approved_NodeEnter">Approved_NodeEnter</a></li><li data-type='method'><a href="WF_NS_PS_Generic.html#.Approved_NodeEnter_Execute">Approved_NodeEnter_Execute</a></li><li data-type='method'><a href="WF_NS_PS_Generic.html#.Approved_TaskEnd">Approved_TaskEnd</a></li><li data-type='method'><a href="WF_NS_PS_Generic.html#.Approved_TaskEnd_Execute">Approved_TaskEnd_Execute</a></li><li data-type='method'><a href="WF_NS_PS_Generic.html#.GetPriceStructure">GetPriceStructure</a></li><li data-type='method'><a href="WF_NS_PS_Generic.html#.GetRolesFromBRMS_ExternalInterface">GetRolesFromBRMS_ExternalInterface</a></li><li data-type='method'><a href="WF_NS_PS_Generic.html#.InitializeBRMSInput">InitializeBRMSInput</a></li><li data-type='method'><a href="WF_NS_PS_Generic.html#.PendingApproval_NodeEnter">PendingApproval_NodeEnter</a></li><li data-type='method'><a href="WF_NS_PS_Generic.html#.PendingApproval_NodeEnter_Execute">PendingApproval_NodeEnter_Execute</a></li><li data-type='method'><a href="WF_NS_PS_Generic.html#.PendingApproval_TaskEnd">PendingApproval_TaskEnd</a></li><li data-type='method'><a href="WF_NS_PS_Generic.html#.PendingApproval_TaskEnd_Execute">PendingApproval_TaskEnd_Execute</a></li><li data-type='method'><a href="WF_NS_PS_Generic.html#.PublishDecision_NodeEnter">PublishDecision_NodeEnter</a></li><li data-type='method'><a href="WF_NS_PS_Generic.html#.PublishDecision_NodeEnter_Execute">PublishDecision_NodeEnter_Execute</a></li><li data-type='method'><a href="WF_NS_PS_Generic.html#.PublishDecision_NodeEnter_FetchNotifiers">PublishDecision_NodeEnter_FetchNotifiers</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="module-ApproverMatrix.html">ApproverMatrix</a></li><li><a href="module-CreatorMatrix.html">CreatorMatrix</a></li><li><a href="module-GWF_Normalize.html">GWF_Normalize</a><ul class='methods'><li data-type='method'><a href="module-GWF_Normalize.html#.GWF_Normalize">GWF_Normalize</a></li></ul></li><li><a href="module-WF_Execution.html">WF_Execution</a><ul class='methods'><li data-type='method'><a href="module-WF_Execution.html#.performWorkFlowTransitions">performWorkFlowTransitions</a></li><li data-type='method'><a href="module-WF_Execution.html#.WF_Execution">WF_Execution</a></li></ul></li><li><a href="module-WF_NS_PriceStructure.html">WF_NS_PriceStructure</a><ul class='methods'><li data-type='method'><a href="module-WF_NS_PriceStructure.html#.WF_NS_PriceStructure_createTaskForApprovalRoles">WF_NS_PriceStructure_createTaskForApprovalRoles</a></li><li data-type='method'><a href="module-WF_NS_PriceStructure.html#.WF_NS_PriceStructure_createTaskForPublisher">WF_NS_PriceStructure_createTaskForPublisher</a></li><li data-type='method'><a href="module-WF_NS_PriceStructure.html#.WF_NS_PriceStructure_getMaxSequence">WF_NS_PriceStructure_getMaxSequence</a></li><li data-type='method'><a href="module-WF_NS_PriceStructure.html#.WF_NS_PriceStructure_getNotificationUserString">WF_NS_PriceStructure_getNotificationUserString</a></li><li data-type='method'><a href="module-WF_NS_PriceStructure.html#.WF_NS_PriceStructure_getRecallRole">WF_NS_PriceStructure_getRecallRole</a></li><li data-type='method'><a href="module-WF_NS_PriceStructure.html#.WF_NS_PriceStructure_getRejectRole">WF_NS_PriceStructure_getRejectRole</a></li><li data-type='method'><a href="module-WF_NS_PriceStructure.html#.WF_NS_PriceStructure_getSubmitRole">WF_NS_PriceStructure_getSubmitRole</a></li><li data-type='method'><a href="module-WF_NS_PriceStructure.html#.WF_NS_PriceStructure_getSubmitRoleOnRejectionState">WF_NS_PriceStructure_getSubmitRoleOnRejectionState</a></li><li data-type='method'><a href="module-WF_NS_PriceStructure.html#~g_ExecuteWorkflowOperation">g_ExecuteWorkflowOperation</a></li></ul></li></ul><h3>Namespaces</h3><ul><li><a href="WebUI.html">WebUI</a></li><li><a href="Workflow.html">Workflow</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">ExportPricePlan</h1>
+    
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+        ExportPricePlan
+        </h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+    
+
+    <h4 class="name" id="ExportPricePlan"><span class="type-signature"></span>new ExportPricePlan<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExportPricePlan.js.html">ExportPricePlan.js</a>, <a href="ExportPricePlan.js.html#line34">line 34</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id="~m_docServerManager"><span class="type-signature">(inner) </span>m_docServerManager<span class="type-signature"> :object</span></h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExportPricePlan.js.html">ExportPricePlan.js</a>, <a href="ExportPricePlan.js.html#line41">line 41</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="~m_exportConfig"><span class="type-signature">(inner) </span>m_exportConfig<span class="type-signature"> :object</span></h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExportPricePlan.js.html">ExportPricePlan.js</a>, <a href="ExportPricePlan.js.html#line39">line 39</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="~m_exportData"><span class="type-signature">(inner) </span>m_exportData<span class="type-signature"> :object</span></h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExportPricePlan.js.html">ExportPricePlan.js</a>, <a href="ExportPricePlan.js.html#line43">line 43</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="~m_pricePlan"><span class="type-signature">(inner) </span>m_pricePlan<span class="type-signature"> :object</span></h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExportPricePlan.js.html">ExportPricePlan.js</a>, <a href="ExportPricePlan.js.html#line40">line 40</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="~m_scopeData"><span class="type-signature">(inner) </span>m_scopeData<span class="type-signature"> :object</span></h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExportPricePlan.js.html">ExportPricePlan.js</a>, <a href="ExportPricePlan.js.html#line38">line 38</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="~m_userConnInfo"><span class="type-signature">(inner) </span>m_userConnInfo<span class="type-signature"> :object</span></h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExportPricePlan.js.html">ExportPricePlan.js</a>, <a href="ExportPricePlan.js.html#line42">line 42</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+        
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id="BuildObjectForReport"><span class="type-signature"></span>BuildObjectForReport<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExportPricePlan.js.html">ExportPricePlan.js</a>, <a href="ExportPricePlan.js.html#line140">line 140</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    <p>Thde data that has been fetch with fetchPrice Plan is formatted in this function</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="BuildReport"><span class="type-signature"></span>BuildReport<span class="signature">(pValue)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExportPricePlan.js.html">ExportPricePlan.js</a>, <a href="ExportPricePlan.js.html#line298">line 298</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    <p>It builds report by fetching CSV data and the jasper files</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>var returnByteArrayPDF = jasperReportUtilObj.exportBinaryArrayOneReport(exportType,compiledReportNamePath,reportJsonData,reportParameters);</code></pre>
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>pValue</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Json object of the report data</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="BuildReportDataFromUI"><span class="type-signature"></span>BuildReportDataFromUI<span class="signature">(p_inputContext)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExportPricePlan.js.html">ExportPricePlan.js</a>, <a href="ExportPricePlan.js.html#line239">line 239</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    <p>The data from front is converted to Report in this function</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>p_inputContext</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Input Constext from the front end</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="fetchPricePlan"><span class="type-signature"></span>fetchPricePlan<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExportPricePlan.js.html">ExportPricePlan.js</a>, <a href="ExportPricePlan.js.html#line89">line 89</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    <p>To fetch Price Plan data using the scope</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="getCSVData"><span class="type-signature"></span>getCSVData<span class="signature">(dataNode)</span><span class="type-signature"> &rarr; {string}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExportPricePlan.js.html">ExportPricePlan.js</a>, <a href="ExportPricePlan.js.html#line338">line 338</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    <p>Converts Json to CSV</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dataNode</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>JSON object to convert</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Converted CSV data</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="getReport"><span class="type-signature"></span>getReport<span class="signature">(p_inputContext)</span><span class="type-signature"> &rarr; {object}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExportPricePlan.js.html">ExportPricePlan.js</a>, <a href="ExportPricePlan.js.html#line72">line 72</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    <p>It returns the final report to the Front End</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>p_inputContext</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Input Context</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Report either excel/pdf</p>
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="initModule"><span class="type-signature"></span>initModule<span class="signature">(p_inputContext)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ExportPricePlan.js.html">ExportPricePlan.js</a>, <a href="ExportPricePlan.js.html#line53">line 53</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    <p>InitModule</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>p_inputContext</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The input Context to init the Export Price Plan this contains 'Scope Data', 'Export Config', 'Export Type', 'DocServer' and 'UserInfo'</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Thu Dec 01 2016 13:24:30 GMT+0530 (India Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
